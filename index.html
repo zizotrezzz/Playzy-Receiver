@@ -278,6 +278,11 @@
         font-size: 80px;
         font-weight: 900;
       }
+      #receiver-transport {
+        margin: 0;
+        color: #b8c0d4;
+        font-size: 18px;
+      }
       #receiver-boot-error {
         position: fixed;
         inset: auto 32px 32px;
@@ -304,11 +309,27 @@
           noRoom: 'Opprett et rom på vertstelefonen.',
         };
         var stage = 'html';
+        var ranks = {
+          html: 0,
+          module: 1,
+          started: 2,
+          sender: 3,
+          state: 4,
+          noRoom: 4,
+        };
+        var transport = '';
+        var startedAt = Date.now();
         var failure = '';
         var complete = false;
         function render() {
           var status = document.getElementById('receiver-boot-phase');
           if (status) status.textContent = phases[stage];
+          var details = document.getElementById('receiver-transport');
+          if (details) {
+            details.textContent = transport;
+            details.hidden =
+              complete || !transport || Date.now() - startedAt < 8000;
+          }
           var alert = document.getElementById('receiver-boot-error');
           if (alert) {
             alert.hidden = !failure;
@@ -331,6 +352,7 @@
         window.playzyReceiverBoot = {
           phase: function (next) {
             if (Object.prototype.hasOwnProperty.call(phases, next)) {
+              if (ranks[next] < ranks[stage]) return;
               stage = next;
               if (next === 'state' || next === 'noRoom') {
                 complete = true;
@@ -338,6 +360,16 @@
               }
               render();
             }
+          },
+          transport: function (messages, snapshots, senders) {
+            transport =
+              'Telefoner: ' +
+              senders +
+              ' · Meldinger: ' +
+              messages +
+              ' · Tilstander: ' +
+              snapshots;
+            render();
           },
         };
         window.addEventListener(
@@ -359,7 +391,7 @@
         document.addEventListener('DOMContentLoaded', render);
       })();
     </script>
-    <script type="module" crossorigin src="./assets/cast-receiver-CxpwOUHr.js"></script>
+    <script type="module" crossorigin src="./assets/cast-receiver-4_jEhDi-.js"></script>
     <link rel="stylesheet" crossorigin href="./assets/cast-receiver-BsYXXD62.css">
   </head>
   <body>
@@ -368,6 +400,7 @@
         <h1>playzy.</h1>
         <div class="pz-waiting-wave" aria-hidden="true"><span class="pz-player-object" data-slot="1" data-state="waiting" aria-hidden="true" style="--player-color:#25C2E5"><span class="pz-player-object__body"><span class="pz-player-object__eyes"></span><span class="pz-player-object__mouth"></span><span class="pz-player-object__slot">01</span></span></span><span class="pz-player-object" data-slot="3" data-state="waiting" aria-hidden="true" style="--player-color:#F95D9B"><span class="pz-player-object__body"><span class="pz-player-object__eyes"></span><span class="pz-player-object__mouth"></span><span class="pz-player-object__slot">03</span></span></span><span class="pz-player-object" data-slot="2" data-state="waiting" aria-hidden="true" style="--player-color:#FFD43B"><span class="pz-player-object__body"><span class="pz-player-object__eyes"></span><span class="pz-player-object__mouth"></span><span class="pz-player-object__slot">02</span></span></span><span class="pz-player-object" data-slot="4" data-state="waiting" aria-hidden="true" style="--player-color:#4FD18B"><span class="pz-player-object__body"><span class="pz-player-object__eyes"></span><span class="pz-player-object__mouth"></span><span class="pz-player-object__slot">04</span></span></span></div>
         <p id="receiver-boot-phase">Laster Playzy på TV-en…</p>
+        <p id="receiver-transport" hidden></p>
       </section>
     </div>
     <aside id="receiver-boot-error" role="alert" hidden></aside>
