@@ -4,11 +4,119 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Playzy TV</title>
+    <style>
+      #receiver-wait {
+        min-height: 100vh;
+        display: grid;
+        align-content: center;
+        justify-items: center;
+        gap: 24px;
+        padding: 48px;
+        background: #121622;
+        color: #f6f2e8;
+        text-align: center;
+        font:
+          28px/1.5 'Inter Variable',
+          sans-serif;
+      }
+      #receiver-wait h1 {
+        margin: 0;
+        color: #e3fb6b;
+        font-size: 80px;
+        font-weight: 900;
+      }
+      #receiver-boot-error {
+        position: fixed;
+        inset: auto 32px 32px;
+        z-index: 10000;
+        padding: 24px;
+        background: #202635;
+        color: #f6f2e8;
+        font: 26px/1.5 sans-serif;
+      }
+      #receiver-boot-error[hidden] {
+        display: none;
+      }
+    </style>
+    <script>
+      // Runs before CAF and the module, including when either fails to load.
+      // Never display exception messages, URLs, stacks or message payloads.
+      (function () {
+        var phases = {
+          html: 'Laster Playzy på TV-en…',
+          module: 'Starter Cast…',
+          started: 'Venter på Playzy fra vertstelefonen…',
+          sender: 'Telefonen er tilkoblet. Venter på rommet…',
+          state: 'Åpner rommet…',
+          noRoom: 'Opprett et rom på vertstelefonen.',
+        };
+        var stage = 'html';
+        var failure = '';
+        var complete = false;
+        function render() {
+          var status = document.getElementById('receiver-boot-phase');
+          if (status) status.textContent = phases[stage];
+          var alert = document.getElementById('receiver-boot-error');
+          if (alert) {
+            alert.hidden = !failure;
+            alert.textContent =
+              'TV-mottakeren stoppet (' +
+              failure +
+              '). Koble fra Cast og prøv igjen.';
+          }
+        }
+        function fail(name) {
+          if (complete) return;
+          failure =
+            /^(Error|TypeError|SyntaxError|ReferenceError|RangeError|URIError|EvalError)$/.test(
+              typeof name === 'string' ? name : '',
+            )
+              ? name
+              : 'Error';
+          render();
+        }
+        window.playzyReceiverBoot = {
+          phase: function (next) {
+            if (Object.prototype.hasOwnProperty.call(phases, next)) {
+              stage = next;
+              if (next === 'state' || next === 'noRoom') {
+                complete = true;
+                failure = '';
+              }
+              render();
+            }
+          },
+        };
+        window.addEventListener(
+          'error',
+          function (event) {
+            if (
+              event.target &&
+              event.target !== window &&
+              event.target.tagName !== 'SCRIPT'
+            )
+              return;
+            fail(event.error && event.error.name);
+          },
+          true,
+        );
+        window.addEventListener('unhandledrejection', function (event) {
+          fail(event.reason && event.reason.name);
+        });
+        document.addEventListener('DOMContentLoaded', render);
+      })();
+    </script>
     <script src="https://www.gstatic.com/cast/sdk/libs/caf_receiver/v3/cast_receiver_framework.js"></script>
-    <script type="module" crossorigin src="./assets/cast-receiver-BpTmWLP2.js"></script>
+    <script type="module" crossorigin src="./assets/cast-receiver-Bp8eip3K.js"></script>
     <link rel="stylesheet" crossorigin href="./assets/cast-receiver-Dcu3Flym.css">
   </head>
   <body>
-    <div id="app" role="status">Venter på Playzy fra vertstelefonen…</div>
+    <div id="app" role="status">
+      <section id="receiver-wait">
+        <h1>playzy.</h1>
+        <p id="receiver-boot-phase">Laster Playzy på TV-en…</p>
+      </section>
+    </div>
+    <aside id="receiver-boot-error" role="alert" hidden></aside>
   </body>
 </html>
