@@ -4,6 +4,259 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Playzy TV</title>
+    <style>/* Provisional prototype language. Intentionally scoped, no global token migration. */
+.pz-prototype {
+  --pz-bg: #121622;
+  --pz-surface: #202637;
+  --pz-text: #f6f5ef;
+  --pz-muted: #b8c0d4;
+  --pz-line: #566078;
+  --pz-accent: #e3fb6b;
+  --pz-ink: #121622;
+  --pz-success: #a7edbc;
+  --pz-error: #ffb4a8;
+  --pz-radius: 18px;
+  --pz-ease: cubic-bezier(0.2, 0, 0, 1);
+  color: var(--pz-text);
+  background: var(--pz-bg);
+}
+.pz-player-object {
+  --object-size: 64px;
+  display: inline-flex;
+  position: relative;
+  width: var(--object-size);
+  height: var(--object-size);
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+}
+.pz-player-object__body {
+  position: relative;
+  display: block;
+  width: 84%;
+  height: 88%;
+  border-radius: 32% 32% 22% 22%;
+  background: var(--player-color);
+  color: #121622;
+  box-shadow: inset 0 -0.035em 0 rgb(18 22 34 / 16%);
+  font-size: var(--object-size);
+}
+.pz-player-object[data-slot='2'] .pz-player-object__body {
+  border-radius: 44% 16% 24% 24%;
+}
+.pz-player-object[data-slot='3'] .pz-player-object__body {
+  border-radius: 16% 44% 24% 24%;
+}
+.pz-player-object[data-slot='4'] .pz-player-object__body {
+  border-radius: 42% 42% 12% 32%;
+}
+.pz-player-object[data-slot='5'] .pz-player-object__body {
+  border-radius: 18% 38% 38% 18%;
+}
+.pz-player-object[data-slot='6'] .pz-player-object__body {
+  border-radius: 38% 18% 18% 38%;
+}
+.pz-player-object[data-slot='7'] .pz-player-object__body {
+  border-radius: 16% 16% 40% 40%;
+}
+.pz-player-object[data-slot='8'] .pz-player-object__body {
+  border-radius: 45% 25% 40% 15%;
+}
+.pz-player-object__eyes {
+  position: absolute;
+  left: 29%;
+  top: 33%;
+  width: 12%;
+  height: 17%;
+  border-radius: 40%;
+  background: currentColor;
+  box-shadow: 0.24em 0 0 currentColor;
+}
+.pz-player-object__mouth {
+  position: absolute;
+  left: 40%;
+  top: 61%;
+  width: 22%;
+  height: 5%;
+  border-radius: 0 0 50% 50%;
+  background: currentColor;
+}
+.pz-player-object__slot {
+  position: absolute;
+  bottom: 8%;
+  right: 12%;
+  font-size: 0.105em;
+  font-weight: 850;
+  letter-spacing: -0.04em;
+}
+.pz-player-object[data-state='correct'] .pz-player-object__mouth,
+.pz-player-object[data-state='winner'] .pz-player-object__mouth {
+  height: 12%;
+}
+.pz-player-object[data-state='wrong'] .pz-player-object__mouth {
+  border-radius: 50% 50% 0 0;
+  top: 64%;
+}
+.pz-player-object[data-state='submitted'] .pz-player-object__eyes {
+  height: 8%;
+  top: 39%;
+}
+.pz-player-object[data-state='speaking'] .pz-player-object__mouth {
+  height: 13%;
+  width: 15%;
+  left: 44%;
+  border-radius: 50%;
+}
+.pz-player-object[data-state='voting'] .pz-player-object__eyes {
+  transform: translateX(7%);
+}
+.pz-answer {
+  --answer-color: #ff9d91;
+  color: #121622;
+  background: var(--answer-color);
+}
+.pz-answer[data-choice='1'] {
+  --answer-color: #a7c4ff;
+}
+.pz-answer[data-choice='2'] {
+  --answer-color: #f5db70;
+}
+.pz-answer[data-choice='3'] {
+  --answer-color: #9de1be;
+}
+.pz-answer__shape {
+  font-size: 1.6em;
+  line-height: 1;
+  flex: 0 0 auto;
+}
+.pz-brand {
+  font-weight: 900;
+  letter-spacing: -0.065em;
+  font-size: 2rem;
+  line-height: 1;
+}
+.pz-brand::after {
+  content: '.';
+  color: var(--pz-accent);
+}
+@keyframes pz-arrive {
+  from {
+    transform: translateY(18px) scale(0.94);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .pz-prototype *,
+  .pz-prototype *::before,
+  .pz-prototype *::after {
+    animation: none !important;
+    transition: none !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Shared by web entry points and inlined into Cast before CAF/module loading. */
+.pz-loading {
+  min-height: 80vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 32px;
+  padding: 32px 24px;
+  background: #121622;
+  color: #f6f5ef;
+  text-align: center;
+  font-family: 'Inter Variable', sans-serif;
+}
+.pz-loading__brand {
+  margin: 0;
+  font-size: clamp(48px, 7vw, 96px);
+  font-weight: 900;
+  letter-spacing: -0.065em;
+  line-height: 1.15;
+}
+.pz-loading__status {
+  margin: 0;
+  max-width: 32ch;
+  color: #b8c0d4;
+  font-size: clamp(18px, 2vw, 28px);
+  line-height: 1.5;
+}
+.pz-waiting-wave {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  gap: clamp(8px, 1.5vw, 24px);
+  padding: 24px 0 8px;
+}
+.pz-waiting-wave .pz-player-object {
+  --object-size: clamp(48px, 8vw, 120px);
+}
+.pz-waiting-wave .pz-player-object__body {
+  transform-origin: center bottom;
+  animation: pz-waiting-wave 1.8s cubic-bezier(0.2, 0, 0, 1) 2;
+}
+.pz-waiting-wave .pz-player-object:nth-child(2) .pz-player-object__body {
+  animation-delay: 120ms;
+}
+.pz-waiting-wave .pz-player-object:nth-child(3) .pz-player-object__body {
+  animation-delay: 240ms;
+}
+.pz-waiting-wave .pz-player-object:nth-child(4) .pz-player-object__body {
+  animation-delay: 360ms;
+}
+.playzy-dot-bounce {
+  display: inline-block;
+  color: #e3fb6b;
+  transform-origin: center bottom;
+  animation: pz-waiting-dot 1.8s cubic-bezier(0.2, 0, 0, 1) 2;
+}
+@keyframes pz-waiting-wave {
+  0%,
+  42%,
+  100% {
+    transform: translateY(0) scale(1);
+  }
+  8% {
+    transform: translateY(0) scale(1.08, 0.92);
+  }
+  20% {
+    transform: translateY(-22%) scale(0.96, 1.04);
+  }
+  31% {
+    transform: translateY(0) scale(1.06, 0.94);
+  }
+}
+@keyframes pz-waiting-dot {
+  0%,
+  44%,
+  100% {
+    transform: translateY(0) scale(1);
+  }
+  10% {
+    transform: translateY(0) scale(1.1, 0.9);
+  }
+  24% {
+    transform: translateY(-25%) scale(0.95, 1.05);
+  }
+  36% {
+    transform: translateY(0) scale(1.08, 0.92);
+  }
+}
+/* A still, equally legible fallback; no perpetual pulsing in reduced motion. */
+@media (prefers-reduced-motion: reduce) {
+  .pz-waiting-wave .pz-player-object__body,
+  .playzy-dot-bounce {
+    animation: none;
+    transform: none;
+  }
+}
+</style>
     <style>
       #receiver-wait {
         min-height: 100vh;
@@ -106,17 +359,18 @@
         document.addEventListener('DOMContentLoaded', render);
       })();
     </script>
-    <script src="https://www.gstatic.com/cast/sdk/libs/caf_receiver/v3/cast_receiver_framework.js"></script>
-    <script type="module" crossorigin src="./assets/cast-receiver-Bp8eip3K.js"></script>
-    <link rel="stylesheet" crossorigin href="./assets/cast-receiver-Dcu3Flym.css">
+    <script type="module" crossorigin src="./assets/cast-receiver-CxpwOUHr.js"></script>
+    <link rel="stylesheet" crossorigin href="./assets/cast-receiver-BsYXXD62.css">
   </head>
   <body>
     <div id="app" role="status">
       <section id="receiver-wait">
         <h1>playzy.</h1>
+        <div class="pz-waiting-wave" aria-hidden="true"><span class="pz-player-object" data-slot="1" data-state="waiting" aria-hidden="true" style="--player-color:#25C2E5"><span class="pz-player-object__body"><span class="pz-player-object__eyes"></span><span class="pz-player-object__mouth"></span><span class="pz-player-object__slot">01</span></span></span><span class="pz-player-object" data-slot="3" data-state="waiting" aria-hidden="true" style="--player-color:#F95D9B"><span class="pz-player-object__body"><span class="pz-player-object__eyes"></span><span class="pz-player-object__mouth"></span><span class="pz-player-object__slot">03</span></span></span><span class="pz-player-object" data-slot="2" data-state="waiting" aria-hidden="true" style="--player-color:#FFD43B"><span class="pz-player-object__body"><span class="pz-player-object__eyes"></span><span class="pz-player-object__mouth"></span><span class="pz-player-object__slot">02</span></span></span><span class="pz-player-object" data-slot="4" data-state="waiting" aria-hidden="true" style="--player-color:#4FD18B"><span class="pz-player-object__body"><span class="pz-player-object__eyes"></span><span class="pz-player-object__mouth"></span><span class="pz-player-object__slot">04</span></span></span></div>
         <p id="receiver-boot-phase">Laster Playzy på TV-en…</p>
       </section>
     </div>
     <aside id="receiver-boot-error" role="alert" hidden></aside>
+    <script src="https://www.gstatic.com/cast/sdk/libs/caf_receiver/v3/cast_receiver_framework.js"></script>
   </body>
 </html>

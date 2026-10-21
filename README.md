@@ -19,7 +19,7 @@ I Settings → Pages velges **Deploy from a branch**, grenen **gh-pages** og
 
 ## Byggkilde
 
-Filene er bygget fra Playzy commit `d907e4b133740eabe7d8555fedd1c4c6fc02abb7`
+Filene er bygget fra Playzy commit `e2ebfe1f37a55a3dd6d14ae67c04b1b3a95e592d`
 med `npm run build:cast --workspace @waypoint/tv` og relativ asset-base.
 Bare `apps/tv/dist-cast/` kopieres ved oppdatering, sammen med denne veiledningen
 og Inter-fontens lisens. Native APK og Node-server skal ikke legges her.
