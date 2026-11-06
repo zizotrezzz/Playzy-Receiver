@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://zizotrezzz.github.io/Playzy-Receiver/sitemap.xml

@@ -1,431 +1,271 @@
 <!doctype html>
-<html lang="no">
+<html lang="nb">
   <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Playzy TV</title>
-    <style>/* Provisional prototype language. Intentionally scoped, no global token migration. */
-.pz-prototype {
-  --pz-bg: #121622;
-  --pz-surface: #202637;
-  --pz-text: #f6f5ef;
-  --pz-muted: #b8c0d4;
-  --pz-line: #566078;
-  --pz-accent: #e3fb6b;
-  --pz-ink: #121622;
-  --pz-success: #a7edbc;
-  --pz-error: #ffb4a8;
-  --pz-radius: 18px;
-  --pz-ease: cubic-bezier(0.2, 0, 0, 1);
-  color: var(--pz-text);
-  background: var(--pz-bg);
-}
-.pz-player-object {
-  --object-size: 64px;
-  display: inline-flex;
-  position: relative;
-  width: var(--object-size);
-  height: var(--object-size);
-  flex: 0 0 auto;
-  align-items: center;
-  justify-content: center;
-}
-.pz-player-object__body {
-  position: relative;
-  display: block;
-  width: 84%;
-  height: 88%;
-  border-radius: 32% 32% 22% 22%;
-  background: var(--player-color);
-  color: #121622;
-  box-shadow: inset 0 -0.035em 0 rgb(18 22 34 / 16%);
-  font-size: var(--object-size);
-}
-.pz-player-object[data-slot='2'] .pz-player-object__body {
-  border-radius: 44% 16% 24% 24%;
-}
-.pz-player-object[data-slot='3'] .pz-player-object__body {
-  border-radius: 16% 44% 24% 24%;
-}
-.pz-player-object[data-slot='4'] .pz-player-object__body {
-  border-radius: 42% 42% 12% 32%;
-}
-.pz-player-object[data-slot='5'] .pz-player-object__body {
-  border-radius: 18% 38% 38% 18%;
-}
-.pz-player-object[data-slot='6'] .pz-player-object__body {
-  border-radius: 38% 18% 18% 38%;
-}
-.pz-player-object[data-slot='7'] .pz-player-object__body {
-  border-radius: 16% 16% 40% 40%;
-}
-.pz-player-object[data-slot='8'] .pz-player-object__body {
-  border-radius: 45% 25% 40% 15%;
-}
-.pz-player-object__eyes {
-  position: absolute;
-  left: 29%;
-  top: 33%;
-  width: 12%;
-  height: 17%;
-  border-radius: 40%;
-  background: currentColor;
-  box-shadow: 0.24em 0 0 currentColor;
-}
-.pz-player-object__mouth {
-  position: absolute;
-  left: 40%;
-  top: 61%;
-  width: 22%;
-  height: 5%;
-  border-radius: 0 0 50% 50%;
-  background: currentColor;
-}
-.pz-player-object__slot {
-  position: absolute;
-  bottom: 8%;
-  right: 12%;
-  font-size: 0.105em;
-  font-weight: 850;
-  letter-spacing: -0.04em;
-}
-.pz-player-object[data-state='correct'] .pz-player-object__mouth,
-.pz-player-object[data-state='winner'] .pz-player-object__mouth {
-  height: 12%;
-}
-.pz-player-object[data-state='wrong'] .pz-player-object__mouth {
-  border-radius: 50% 50% 0 0;
-  top: 64%;
-}
-.pz-player-object[data-state='submitted'] .pz-player-object__eyes {
-  height: 8%;
-  top: 39%;
-}
-.pz-player-object[data-state='speaking'] .pz-player-object__mouth {
-  height: 13%;
-  width: 15%;
-  left: 44%;
-  border-radius: 50%;
-}
-.pz-player-object[data-state='voting'] .pz-player-object__eyes {
-  transform: translateX(7%);
-}
-.pz-answer {
-  --answer-color: #ff9d91;
-  color: #121622;
-  background: var(--answer-color);
-}
-.pz-answer[data-choice='1'] {
-  --answer-color: #a7c4ff;
-}
-.pz-answer[data-choice='2'] {
-  --answer-color: #f5db70;
-}
-.pz-answer[data-choice='3'] {
-  --answer-color: #9de1be;
-}
-.pz-answer__shape {
-  font-size: 1.6em;
-  line-height: 1;
-  flex: 0 0 auto;
-}
-.pz-brand {
-  font-weight: 900;
-  letter-spacing: -0.065em;
-  font-size: 2rem;
-  line-height: 1;
-}
-.pz-brand::after {
-  content: '.';
-  color: var(--pz-accent);
-}
-@keyframes pz-arrive {
-  from {
-    transform: translateY(18px) scale(0.94);
-    opacity: 0;
-  }
-  to {
-    transform: translateY(0) scale(1);
-    opacity: 1;
-  }
-}
-@media (prefers-reduced-motion: reduce) {
-  .pz-prototype *,
-  .pz-prototype *::before,
-  .pz-prototype *::after {
-    animation: none !important;
-    transition: none !important;
-    scroll-behavior: auto !important;
-  }
-}
-
-/* Shared by web entry points and inlined into Cast before CAF/module loading. */
-.pz-loading {
-  min-height: 80vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 32px;
-  padding: 32px 24px;
-  background: #121622;
-  color: #f6f5ef;
-  text-align: center;
-  font-family: 'Inter Variable', sans-serif;
-}
-.pz-loading__brand {
-  margin: 0;
-  font-size: clamp(48px, 7vw, 96px);
-  font-weight: 900;
-  letter-spacing: -0.065em;
-  line-height: 1.15;
-}
-.pz-loading__status {
-  margin: 0;
-  max-width: 32ch;
-  color: #b8c0d4;
-  font-size: clamp(18px, 2vw, 28px);
-  line-height: 1.5;
-}
-.pz-waiting-wave {
-  display: flex;
-  align-items: flex-end;
-  justify-content: center;
-  gap: clamp(8px, 1.5vw, 24px);
-  padding: 24px 0 8px;
-}
-.pz-waiting-wave .pz-player-object {
-  --object-size: clamp(48px, 8vw, 120px);
-}
-.pz-waiting-wave .pz-player-object__body {
-  transform-origin: center bottom;
-  animation: pz-waiting-wave 1.8s cubic-bezier(0.2, 0, 0, 1) 2;
-}
-.pz-waiting-wave .pz-player-object:nth-child(2) .pz-player-object__body {
-  animation-delay: 120ms;
-}
-.pz-waiting-wave .pz-player-object:nth-child(3) .pz-player-object__body {
-  animation-delay: 240ms;
-}
-.pz-waiting-wave .pz-player-object:nth-child(4) .pz-player-object__body {
-  animation-delay: 360ms;
-}
-.playzy-dot-bounce {
-  display: inline-block;
-  color: #e3fb6b;
-  transform-origin: center bottom;
-  animation: pz-waiting-dot 1.8s cubic-bezier(0.2, 0, 0, 1) 2;
-}
-@keyframes pz-waiting-wave {
-  0%,
-  42%,
-  100% {
-    transform: translateY(0) scale(1);
-  }
-  8% {
-    transform: translateY(0) scale(1.08, 0.92);
-  }
-  20% {
-    transform: translateY(-22%) scale(0.96, 1.04);
-  }
-  31% {
-    transform: translateY(0) scale(1.06, 0.94);
-  }
-}
-@keyframes pz-waiting-dot {
-  0%,
-  44%,
-  100% {
-    transform: translateY(0) scale(1);
-  }
-  10% {
-    transform: translateY(0) scale(1.1, 0.9);
-  }
-  24% {
-    transform: translateY(-25%) scale(0.95, 1.05);
-  }
-  36% {
-    transform: translateY(0) scale(1.08, 0.92);
-  }
-}
-/* A still, equally legible fallback; no perpetual pulsing in reduced motion. */
-@media (prefers-reduced-motion: reduce) {
-  .pz-waiting-wave .pz-player-object__body,
-  .playzy-dot-bounce {
-    animation: none;
-    transform: none;
-  }
-}
-</style>
-    <style>
-      #receiver-wait {
-        min-height: 100vh;
-        display: grid;
-        align-content: center;
-        justify-items: center;
-        gap: 24px;
-        padding: 48px;
-        background: #121622;
-        color: #f6f2e8;
-        text-align: center;
-        font:
-          28px/1.5 'Inter Variable',
-          sans-serif;
-      }
-      #receiver-wait h1 {
-        margin: 0;
-        color: #e3fb6b;
-        font-size: 80px;
-        font-weight: 900;
-      }
-      #receiver-transport {
-        margin: 0;
-        color: #b8c0d4;
-        font-size: 18px;
-      }
-      #receiver-boot-error {
-        position: fixed;
-        inset: auto 32px 32px;
-        z-index: 10000;
-        padding: 24px;
-        background: #202635;
-        color: #f6f2e8;
-        font: 26px/1.5 sans-serif;
-      }
-      #receiver-boot-error[hidden] {
-        display: none;
-      }
-    </style>
-    <script>
-      // Runs before CAF and the module, including when either fails to load.
-      // Never display exception messages, URLs, stacks or message payloads.
-      (function () {
-        var phases = {
-          html: 'Laster Playzy på TV-en…',
-          module: 'Starter Cast…',
-          started: 'Venter på Playzy fra vertstelefonen…',
-          sender: 'Telefonen er tilkoblet. Venter på rommet…',
-          opening: 'Åpner rommet…',
-          state: 'Åpner rommet…',
-          noRoom: 'Opprett et rom på vertstelefonen.',
-        };
-        var stage = 'html';
-        var ranks = {
-          html: 0,
-          module: 1,
-          started: 2,
-          sender: 3,
-          opening: 4,
-          state: 4,
-          noRoom: 4,
-        };
-        var transport = '';
-        var startedAt = Date.now();
-        // Only a bounded major version and a capability bit; never the full UA.
-        var chrome = /\b(?:Chrome|Chromium)\/(\d{1,3})(?:\.|\b)/.exec(
-          navigator.userAgent,
-        );
-        var runtime =
-          'Chrome ' +
-          (chrome ? chrome[1] : 'ukjent') +
-          ' · kopi: ' +
-          (typeof window.structuredClone === 'function'
-            ? 'innebygd'
-            : 'reserve');
-        var failure = '';
-        var complete = false;
-        function render() {
-          var status = document.getElementById('receiver-boot-phase');
-          if (status) status.textContent = phases[stage];
-          var details = document.getElementById('receiver-transport');
-          if (details) {
-            details.textContent = transport;
-            details.hidden =
-              complete || !transport || Date.now() - startedAt < 8000;
-          }
-          var alert = document.getElementById('receiver-boot-error');
-          if (alert) {
-            alert.hidden = !failure;
-            alert.textContent =
-              'TV-mottakeren stoppet (' +
-              failure +
-              '). ' +
-              runtime +
-              '. Koble fra Cast og prøv igjen.';
-          }
-        }
-        function fail(name) {
-          if (complete) return;
-          failure =
-            /^(Error|TypeError|SyntaxError|ReferenceError|RangeError|URIError|EvalError)$/.test(
-              typeof name === 'string' ? name : '',
-            )
-              ? name
-              : 'Error';
-          render();
-        }
-        window.playzyReceiverBoot = {
-          phase: function (next) {
-            if (Object.prototype.hasOwnProperty.call(phases, next)) {
-              if (ranks[next] < ranks[stage]) return;
-              stage = next;
-              if (next === 'opening') {
-                complete = false;
-                failure = '';
-                startedAt = Date.now();
-              }
-              if (next === 'state' || next === 'noRoom') {
-                complete = true;
-                failure = '';
-              }
-              render();
-            }
-          },
-          transport: function (messages, snapshots, senders) {
-            transport =
-              'Telefoner: ' +
-              senders +
-              ' · Meldinger: ' +
-              messages +
-              ' · Tilstander: ' +
-              snapshots +
-              ' · ' +
-              runtime;
-            render();
-          },
-        };
-        window.addEventListener(
-          'error',
-          function (event) {
-            if (
-              event.target &&
-              event.target !== window &&
-              event.target.tagName !== 'SCRIPT'
-            )
-              return;
-            fail(event.error && event.error.name);
-          },
-          true,
-        );
-        window.addEventListener('unhandledrejection', function (event) {
-          fail(event.reason && event.reason.name);
-        });
-        document.addEventListener('DOMContentLoaded', render);
-      })();
-    </script>
-    <script type="module" crossorigin src="./assets/cast-receiver-DlGj8VV6.js"></script>
-    <link rel="stylesheet" crossorigin href="./assets/cast-receiver-PbwVGg8P.css">
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta
+      name="description"
+      content="Én TV. Deres telefoner. Playzy samler gjengen med Geografi, Sketch, Imposter, Trivia og Vri. Bli med via QR, uten konto."
+    />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'none'; img-src 'self'; style-src 'self'; font-src 'self'; media-src 'self'; base-uri 'none'; form-action 'none'"
+    />
+    <meta name="theme-color" content="#121622" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Playzy | Én TV. Hele gjengen." />
+    <meta
+      property="og:description"
+      content="Gjett, tegn og bløff. Fem spill på TV-en, med telefonene som kontrollere."
+    />
+    <meta property="og:image" content="https://zizotrezzz.github.io/Playzy-Receiver/assets/feature.png" />
+    <meta property="og:url" content="https://zizotrezzz.github.io/Playzy-Receiver/" />
+    <link rel="canonical" href="https://zizotrezzz.github.io/Playzy-Receiver/" />
+    <title>Playzy | Én TV. Hele gjengen.</title>
+    <link rel="icon" href="assets/app-icon.svg" type="image/svg+xml" />
+    <link
+      rel="preload"
+      href="assets/inter.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
+    <link rel="stylesheet" href="site.css" />
   </head>
   <body>
-    <div id="app" role="status">
-      <section id="receiver-wait">
-        <h1>playzy.</h1>
-        <div class="pz-waiting-wave" aria-hidden="true"><span class="pz-player-object" data-slot="1" data-state="waiting" aria-hidden="true" style="--player-color:#25C2E5"><span class="pz-player-object__body"><span class="pz-player-object__eyes"></span><span class="pz-player-object__mouth"></span><span class="pz-player-object__slot">01</span></span></span><span class="pz-player-object" data-slot="3" data-state="waiting" aria-hidden="true" style="--player-color:#F95D9B"><span class="pz-player-object__body"><span class="pz-player-object__eyes"></span><span class="pz-player-object__mouth"></span><span class="pz-player-object__slot">03</span></span></span><span class="pz-player-object" data-slot="2" data-state="waiting" aria-hidden="true" style="--player-color:#FFD43B"><span class="pz-player-object__body"><span class="pz-player-object__eyes"></span><span class="pz-player-object__mouth"></span><span class="pz-player-object__slot">02</span></span></span><span class="pz-player-object" data-slot="4" data-state="waiting" aria-hidden="true" style="--player-color:#4FD18B"><span class="pz-player-object__body"><span class="pz-player-object__eyes"></span><span class="pz-player-object__mouth"></span><span class="pz-player-object__slot">04</span></span></span></div>
-        <p id="receiver-boot-phase">Laster Playzy på TV-en…</p>
-        <p id="receiver-transport" hidden></p>
+    <a class="skip" href="#innhold">Hopp til innhold</a>
+    <header class="site-header wrap">
+      <a class="wordmark" href="./" aria-label="Playzy, hjem"
+        >playzy<span>.</span></a
+      >
+      <nav aria-label="Hovedmeny">
+        <a href="#spillene">Spillene</a
+        ><a href="#slik-spiller-dere">Slik spiller dere</a
+        ><a href="mailto:yousef@pyksel.no">Kontakt</a>
+      </nav>
+    </header>
+    <main id="innhold">
+      <section class="hero wrap" aria-labelledby="hero-title">
+        <div class="hero-copy">
+          <h1 id="hero-title">Én TV.<br /><span>Hele gjengen.</span></h1>
+          <p>
+            Gjett, tegn og bløff. Fem spill på TV-en, med telefonene som
+            kontrollere.
+          </p>
+          <a class="button" href="#spillene"
+            >Finn deres neste spill <span aria-hidden="true">↓</span></a
+          >
+        </div>
+        <div class="hero-stage">
+          <img
+            class="hero-tv"
+            src="assets/tv-sketch.webp"
+            width="1920"
+            height="1080"
+            alt="Sketch på TV: én spiller tegner, resten av gjengen gjetter"
+            fetchpriority="high"
+          />
+          <img
+            class="hero-phone"
+            src="assets/mobile-sketch.webp"
+            width="1080"
+            height="1920"
+            alt="Spillerens tegneflate på telefonen"
+          />
+        </div>
       </section>
-    </div>
-    <aside id="receiver-boot-error" role="alert" hidden></aside>
-    <script src="https://www.gstatic.com/cast/sdk/libs/caf_receiver/v3/cast_receiver_framework.js"></script>
+      <section class="intro wrap" aria-label="Spillkveld med Playzy">
+        <p>Telefonen er din.<br /><strong>Avsløringen er alles.</strong></p>
+        <div>
+          <p>
+            Sett dere sammen. Velg et spill. Se hvem som vet mest, hvem som
+            tegner best, og hvem dere absolutt ikke bør stole på.
+          </p>
+          <p>
+            Vennene blir med i nettleseren via QR. Ingen konto eller
+            appnedlasting for gjestene.
+          </p>
+        </div>
+      </section>
+      <section id="spillene" class="games wrap" aria-labelledby="games-title">
+        <h2 id="games-title">Hva spiller vi?</h2>
+        <div class="game-grid">
+          <article class="game game-sketch">
+            <div>
+              <h3>Sketch</h3>
+              <p>
+                Du tegner. Gjengen gjetter.<br />Kunstnerisk talent er
+                valgfritt.
+              </p>
+            </div>
+            <img
+              loading="lazy"
+              src="assets/tv-sketch.webp"
+              width="1920"
+              height="1080"
+              alt="En tegning vokser fram på den felles TV-skjermen"
+            />
+          </article>
+          <article class="game game-trivia">
+            <div>
+              <h3>Trivia</h3>
+              <p>Ett spørsmål. Fire svar.<br />Hvem vet, og hvem bare tror?</p>
+            </div>
+            <img
+              loading="lazy"
+              src="assets/tv-trivia.webp"
+              width="1920"
+              height="1080"
+              alt="Trivia-spørsmål med fire fargede svaralternativer"
+            />
+          </article>
+          <article class="game game-imposter">
+            <div>
+              <h3>Imposter</h3>
+              <p>En av dere skjuler noe.<br />Les rommet. Finn bløffen.</p>
+            </div>
+            <img
+              loading="lazy"
+              src="assets/tv-imposter.webp"
+              width="1920"
+              height="1080"
+              alt="Imposter samler spillerne rundt en hemmelig rolle"
+            />
+          </article>
+          <article class="game game-vri">
+            <div>
+              <h3>Vri</h3>
+              <p>Din hånd. Deres problem.<br />Spill kortene på telefonen.</p>
+            </div>
+            <img
+              loading="lazy"
+              src="assets/tv-vri.webp"
+              width="1920"
+              height="1080"
+              alt="Vri: felles kortbord på TV-en og private hender på telefonene"
+            />
+          </article>
+          <article class="game game-geo">
+            <div>
+              <h3>Geografi</h3>
+              <p>Utforsk ekte gatebilder.<br />Gjett hvor. Finn ut sammen.</p>
+            </div>
+            <div class="geo-art" aria-hidden="true">
+              <img
+                src="assets/app-icon.svg"
+                width="108"
+                height="108"
+                alt=""
+              /><strong>Hvor<br />er vi?</strong>
+            </div>
+            <p class="game-note">Gatebilder og kart krever internett.</p>
+          </article>
+        </div>
+      </section>
+      <section
+        id="slik-spiller-dere"
+        class="how wrap"
+        aria-labelledby="how-title"
+      >
+        <h2 id="how-title">Fra sofa til spillkveld.</h2>
+        <ol>
+          <li>
+            <span>01</span>
+            <div>
+              <h3>Start på TV-en</h3>
+              <p>
+                Bruk Playzy på Android TV. Eller la Android-telefonen være vert,
+                og send TV-visningen med Google Cast.
+              </p>
+            </div>
+          </li>
+          <li>
+            <span>02</span>
+            <div>
+              <h3>Skann og bli med</h3>
+              <p>
+                Alle kobler seg til samme lokale nettverk og skanner QR-koden
+                med telefonen.
+              </p>
+            </div>
+          </li>
+          <li>
+            <span>03</span>
+            <div>
+              <h3>Velg. Spill. Én runde til.</h3>
+              <p>
+                Telefonene holder på svarene og hemmelighetene. TV-en samler
+                dere om det som skjer.
+              </p>
+            </div>
+          </li>
+        </ol>
+      </section>
+      <section class="questions wrap" aria-labelledby="questions-title">
+        <h2 id="questions-title">Før dere samler gjengen.</h2>
+        <details>
+          <summary>Hva trenger vi?</summary>
+          <p>
+            En Android TV med Playzy, eller en Android-telefon med Playzy og en
+            TV eller mottaker som støtter Google Cast. Gjestene bruker
+            nettleseren på telefonene sine. Alle må være på samme lokale
+            nettverk. Gatebilder og kart krever internett.
+          </p>
+        </details>
+        <details>
+          <summary>Må alle installere en app?</summary>
+          <p>
+            Nei. Bare vertsenheten trenger Playzy-appen. Gjestene blir med via
+            QR i nettleseren, både fra Android og iPhone.
+          </p>
+        </details>
+        <details>
+          <summary>Hvor blir spillene lagret?</summary>
+          <p>
+            Spillet kjører på vertsenheten. Vi har ingen egen skytjener eller
+            brukerkontoer. Noen innstillinger og gjenkoblingsnøkler lagres
+            lokalt.
+            <a href="privacy-policy.html">Les personvernerklæringen</a> for
+            detaljer om lokale data og tredjepartstjenester.
+          </p>
+        </details>
+        <details>
+          <summary>Hvor kan vi laste ned Playzy?</summary>
+          <p>
+            Vi klargjør lanseringen på Google Play. Lenken kommer her når appene
+            er tilgjengelige. Har du spørsmål om testing eller lansering,
+            kontakt <a href="mailto:yousef@pyksel.no">yousef@pyksel.no</a>.
+          </p>
+        </details>
+      </section>
+      <section class="closing wrap">
+        <img
+          src="assets/tv-banner.svg"
+          width="320"
+          height="180"
+          alt="Playzy og tre av gjengens spillerfigurer"
+          loading="lazy"
+        />
+        <h2>Samle gjengen.<br /><span>Resten tar dere sammen.</span></h2>
+      </section>
+    </main>
+    <footer class="site-footer wrap">
+      <div class="company">
+  <p>Playzy fra Pyksel AS</p>
+  <p>
+    Org.nr.
+    <a href="https://virksomhet.brreg.no/nb/oppslag/enheter/935082676"
+      >935 082 676 MVA</a
+    >
+    · Foretaksregisteret
+  </p>
+  <address>Bolstadhagen 37, 3028 Drammen, Norge</address>
+</div>
+
+      <nav aria-label="Bunnmeny">
+        <a href="privacy-policy.html">Personvern</a
+        ><a href="mailto:yousef@pyksel.no">Kontakt Yousef</a>
+      </nav>
+    </footer>
   </body>
 </html>
