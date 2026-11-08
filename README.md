@@ -1,5 +1,9 @@
 # Playzy TV Receiver
 
+Presentasjonsnettsiden og personvernerklæringen ligger nå på https://playzy.no.
+Forsiden og HTML-erklæringen her videresender dit. Cast-mottakeren beholder
+adressen nedenfor.
+
 Offentlige, statiske visningsfiler for Playzy Google Cast.
 
 Mobiltelefonen kjører spillserveren og har autoritativ spilltilstand. Denne
