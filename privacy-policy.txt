@@ -1,8 +1,8 @@
 Personvernerklæring for Playzy
 
-Sist oppdatert: 6. november 2026
-Ansvarlig: Pyksel AS ved Yousef
-Kontakt: yousef@pyksel.no
+Sist oppdatert: 8. november 2026
+Ansvarlig: Pyksel AS
+Kontakt: support@playzy.no
 
 Gjelder appene Playzy for telefon og Playzy TV.
 
@@ -112,7 +112,7 @@ DINE RETTIGHETER
 Siden vi ikke mottar eller lagrer opplysninger om deg, har vi ingenting å vise
 fram, rette eller slette. Lokale data sletter du ved å avslutte spillet,
 avinstallere appen eller slette nettleserdata. Har du spørsmål, kontakt
-yousef@pyksel.no. Du kan også klage til Datatilsynet: https://www.datatilsynet.no
+support@playzy.no. Du kan også klage til Datatilsynet: https://www.datatilsynet.no
 
 
 ENDRINGER
